@@ -9,11 +9,12 @@ PREP_ROUNDS <- 3L
 
 # One row per place the player can visit on the Hill.
 prep_locations <- data.frame(
-  location    = c("Bruin Plate", "De Neve", "BFit"),
+  location    = c("Bruin Plate", "De Neve", "BFit", "CVS"),
   description = c(
     "Dining hall. Clean food that builds you up.",
     "Dining hall. Comfort food that toughens you up.",
-    "Gym. Workouts that make you hit harder and move faster."
+    "Gym. Workouts that make you hit harder and move faster.",
+    "Convenience store. Buy medicines that helps you to recover from attacks or snacks that builds you up."
   )
 )
 
@@ -26,22 +27,25 @@ prep_locations <- data.frame(
 # A perk can also unlock something without changing stats: "Fortune Cookie"
 # is the EXTRA_CHOICE_PERK named in campus_data.R.
 prep_perks <- data.frame(
-  name        = c("Protein Bowl", "Late Night Burger", "Fortune Cookie", "Leg Day", "Treadmill Sprint"),
-  location    = c("Bruin Plate",  "De Neve",           "De Neve",        "BFit",    "BFit"),
-  cost        = c(3L,             2L,                  4L,               0L,        0L),
+  name        = c("Protein Bowl", "Late Night Burger", "Fortune Cookie", "Leg Day", "Treadmill Sprint", "First Aid Kit", "Pain Relievers", "Energy Drink"),
+  location    = c("Bruin Plate",  "De Neve",           "De Neve",        "BFit",    "BFit",             "CVS",           "CVS",             "CVS"),
+  cost        = c(3L,             2L,                  4L,               0L,        0L,                  4L,              3L,               2L),
   description = c(
     "A bigger health bar.",
     "Greasy armor.",
     "You will see one more option in campus choice events.",
     "Stronger hits.",
-    "Faster feet."
+    "Faster feet.",
+    "Basic medical supplies useful for injuries.",
+    "Faster recovery from attack.",
+    "A drink that boosts your energy."
   ),
-  hp          = c(0L,             0L,                  0L,               0L,        0L),
-  max_hp      = c(20L,            0L,                  0L,               0L,        0L),
-  atk         = c(0L,             0L,                  0L,               8L,        0L),
-  def         = c(0L,             5L,                  0L,               0L,        0L),
-  spd         = c(0L,             0L,                  0L,               0L,        10L),
-  luck        = c(0L,             0L,                  0L,               0L,        0L)
+  hp          = c(0L,             0L,                  0L,               0L,        0L,                   0L,             0L,               0L),
+  max_hp      = c(20L,            0L,                  0L,               0L,        0L,                   0L,             0L,               0L),
+  atk         = c(0L,             0L,                  0L,               8L,        0L,                   0L,             0L,               5L),
+  def         = c(0L,             5L,                  0L,               0L,        0L,                   15L,            10L,              0L),
+  spd         = c(0L,             0L,                  0L,               0L,        10L,                  0L,             0L,               3L),
+  luck        = c(0L,             0L,                  0L,               0L,        0L,                   0L,             0L,               0L)
 )
 
 # Stop when this file is sourced if a perk names a location that is not

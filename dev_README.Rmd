@@ -13,8 +13,7 @@ output:
 We are creating a terminal text-based R mini game. GUI is not needed.
 This game has two phases: prep and fight. You are a UCLA student living on the hill. Use your “prep”
 rounds in workouts and food, and purchase supplies in the residential area to gain powers, perks, and options.
-Then, you go to school only to find the campus flooded with monsters. Use your perks and powers to defeat
-the monsters and reach MS4000A, where you confront the Superhuman Yoshua and his soldier Mighty Erik.
+Then, you go to school only to find the campus flooded with monsters. Use your perks and powers to defeat the monsters and reach MS4000A, where you confront the Superhuman Yoshua and his soldier Mighty Erik.
 
 ## Game Structure
 
@@ -48,7 +47,7 @@ Coding: TBD
 
 The prep phase on the hill is a directory of locations + items. Therefore, we separate defined events (`prep_data.R`) from the prep actor file.
 
-Prep Locations: TBD, written example items in BPlate, De Neve, BFit.
+Prep Locations: TBD, written example items in BPlate, De Neve, BFit, CVS.
 
 ### Campus Phase
 

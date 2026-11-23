@@ -26,5 +26,15 @@ run_prep <- function(player) {
 visit_location <- function(player, location) {
   # TODO: print the location's description, pick the prep_perks rows
   #       for this location, and pass them to run_shop().
+  
+  #Find the related description
+  location_info <- prep_locations[prep_locations$location == location]
+  
+  #print the location
+  cat(location_info$description)
+  
+  #Find items available at that location
+  available_items <- prep_perks[prep_perks$location == location, ]
+  
   player
 }
