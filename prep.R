@@ -9,13 +9,26 @@ run_prep <- function(player) {
   # TODO: show_status(player) so the player sees their starting money.
   #       Repeat PREP_ROUNDS times: offer prep_locations$location plus
   #       "Head to campus" with ask_choice(), then visit_location().
+  
+  show_status(player)
+  
   cat("\nYou start on the Hill.\n")
-  choice <- ask_choice(c("Visit BFit", "Head straight to campus"))
-
-  if (choice == 1L) {
-    player$atk <- player$atk + 8L
-    cat("Your attack increased to", player$atk, "\n")
+  
+  for (i in seq_len(PREP_ROUNDS)){
+    cat("Prep round", i, "of", PREP_ROUNDS, "\n")
+    choices <- c(prep_locations$location, "Head straight to campus.")
+    choice <- ask_choice(choices)
+    
+    if(choice == length(choices)){
+      break
+    }
+    
+    location <- prep_locations$location[choice]
+    
+    player <- visit_location(player, location)
   }
+
+  cat("Your preparation is complete. Time to head to campus! \n")
 
   player
 }
@@ -36,5 +49,7 @@ visit_location <- function(player, location) {
   #Find items available at that location
   available_items <- prep_perks[prep_perks$location == location, ]
   
+  #Let the player shop
+  player <- run_shop(player, available_items)
   player
 }
