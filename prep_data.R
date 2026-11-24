@@ -29,7 +29,7 @@ prep_locations <- data.frame(
 prep_perks <- data.frame(
   name        = c("Protein Bowl", "Late Night Burger", "Fortune Cookie", "Leg Day", "Treadmill Sprint", "First Aid Kit", "Pain Relievers", "Energy Drink"),
   location    = c("Bruin Plate",  "De Neve",           "De Neve",        "BFit",    "BFit",             "CVS",           "CVS",             "CVS"),
-  cost        = c(3L,             2L,                  4L,               0L,        0L,                  4L,              3L,               2L),
+  cost        = c(3L,             2L,                  4L,               0L,        0L,                  4L,              3L,               3L),
   description = c(
     "A bigger health bar.",
     "Greasy armor.",
@@ -40,11 +40,11 @@ prep_perks <- data.frame(
     "Faster recovery from attack.",
     "A drink that boosts your energy."
   ),
-  hp          = c(0L,             0L,                  0L,               0L,        0L,                   0L,             0L,               0L),
+  hp          = c(0L,             0L,                  0L,               0L,        0L,                   40L,            0L,               0L),
   max_hp      = c(20L,            0L,                  0L,               0L,        0L,                   0L,             0L,               0L),
-  atk         = c(0L,             0L,                  0L,               8L,        0L,                   0L,             0L,               5L),
-  def         = c(0L,             5L,                  0L,               0L,        0L,                   15L,            10L,              0L),
-  spd         = c(0L,             0L,                  0L,               0L,        10L,                  0L,             0L,               3L),
+  atk         = c(0L,             0L,                  0L,               8L,        0L,                   0L,             0L,               0L),
+  def         = c(0L,             5L,                  0L,               0L,        0L,                   0L,            10L,               0L),
+  spd         = c(0L,             0L,                  0L,               0L,        10L,                  0L,             0L,               10L),
   luck        = c(0L,             0L,                  0L,               0L,        0L,                   0L,             0L,               0L)
 )
 
