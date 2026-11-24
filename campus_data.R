@@ -25,16 +25,17 @@ EXTRA_CHOICE_PERK <- "Fortune Cookie"
 # def is a percent of incoming damage blocked.
 # One row of this table is passed to fight() as the enemy.
 monsters <- data.frame(
-  name         = c("Campus Zombie", "Bruin Walk Ghoul"),
+  name         = c("Campus Zombie", "Bruin Walk Ghoul", "Joel Bruin"),
   intro        = c(
     "A zombie staggers out of Powell Library.",
-    "A ghoul drifts through the flyer crowd on Bruin Walk."
+    "A ghoul drifts through the flyer crowd on Bruin Walk.",
+    "A fake mascot shape-shifted from the Bruin Bear Statue."
   ),
-  hp           = c(40L, 60L),
-  atk          = c(12L, 16L),
-  def          = c(0L,  10L),
-  spd          = c(90L, 110L),
-  reward_money = c(3L,  5L)
+  hp           = c(40L, 60L,  80L),
+  atk          = c(12L, 16L,  20L),
+  def          = c(0L,  10L,  15L),
+  spd          = c(90L, 110L, 120L),
+  reward_money = c(3L,  5L,   10L)
 )
 
 # The buff and debuff table for campus events.
@@ -43,20 +44,22 @@ monsters <- data.frame(
 # The STAT_COLS columns are changes added to the player by apply_effect().
 # LUCK changes their size for choice events and fleeing. See luck_scale().
 campus_buffs <- data.frame(
-  name        = c("Adrenaline Rush", "Lucky Penny", "Twisted Ankle", "Midterm Dread"),
-  type        = c("buff",            "buff",        "debuff",        "debuff"),
+  name        = c("Adrenaline Rush", "Lucky Penny", "Twisted Ankle", "Midterm Dread", "Free Food", "Sudden Rain"),
+  type        = c("buff",            "buff",        "debuff",        "debuff",        "buff",      "debuff"),
   description = c(
     "Your heart is pounding. You hit harder.",
     "Heads up on Bruin Walk. Things go your way.",
     "You landed badly. You move slower.",
-    "You remembered the midterm. Your guard drops."
+    "You remembered the midterm. Your guard drops.",
+    "You got food. You have more energy.",
+    "You didn't bring an umbrella. You need to move slower to avoid the puddles."
   ),
-  hp          = c(0L,                0L,            0L,              0L),
-  max_hp      = c(0L,                0L,            0L,              0L),
-  atk         = c(4L,                0L,            0L,              0L),
-  def         = c(0L,                0L,            0L,              -5L),
-  spd         = c(0L,                0L,            -10L,            0L),
-  luck        = c(0L,                2L,            0L,              0L)
+  hp          = c(0L,                0L,            0L,              0L,                5L,           0L),
+  max_hp      = c(0L,                0L,            0L,              0L,                0L,           0L),
+  atk         = c(4L,                0L,            0L,              0L,                2L,           0L),
+  def         = c(0L,                0L,            0L,              -5L,               0L,           0L),
+  spd         = c(0L,                0L,            -10L,            0L,                0L,           -5L),
+  luck        = c(0L,                2L,            0L,              0L,                0L,           0L)
 )
 
 # One row per choice event. Each event has four options: two whose effect
@@ -85,16 +88,18 @@ stopifnot(choice_events$effect_1 %in% campus_buffs$name,
 # One row per item a campus shop can sell. cost is paid from player$money.
 # The STAT_COLS columns are changes added to the player by apply_effect().
 shop_items <- data.frame(
-  name        = c("First Aid Kit", "Energy Drink"),
-  cost        = c(4L,              3L),
+  name        = c("First Aid Kit", "Energy Drink", "Running Shoes", "Pain Reliever"),
+  cost        = c(4L,              3L,             3L,              3L),
   description = c(
     "Patch yourself up.",
-    "Wings, briefly."
+    "Wings, briefly.",
+    "Speed you up.",
+    "Pain pain go away."
   ),
-  hp          = c(40L,             0L),
-  max_hp      = c(0L,              0L),
-  atk         = c(0L,              0L),
-  def         = c(0L,              0L),
-  spd         = c(0L,              10L),
-  luck        = c(0L,              0L)
+  hp          = c(40L,             0L,             0L,              0L),
+  max_hp      = c(0L,              0L,             0L,              0L),
+  atk         = c(0L,              0L,             0L,              0L),
+  def         = c(0L,              0L,             0L,              10L),
+  spd         = c(0L,              10L,            10L,             0L),
+  luck        = c(0L,              0L,             0L,              0L)
 )
