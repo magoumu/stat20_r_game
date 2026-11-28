@@ -30,6 +30,9 @@ prep_perks <- data.frame(
   name        = c("Protein Bowl", "Late Night Burger", "Fortune Cookie", "Leg Day", "Treadmill Sprint", "First Aid Kit", "Pain Relievers", "Energy Drink"),
   location    = c("Bruin Plate",  "De Neve",           "De Neve",        "BFit",    "BFit",             "CVS",           "CVS",             "CVS"),
   cost        = c(3L,             2L,                  4L,               0L,        0L,                  4L,              3L,               3L),
+  # TRUE = kept in the inventory and used during a fight, see use_item() in
+  # combat.R. FALSE = takes effect when bought.
+  consumable  = c(FALSE,          FALSE,               FALSE,            FALSE,     FALSE,               TRUE,            TRUE,             TRUE),
   description = c(
     "A bigger health bar.",
     "Greasy armor.",

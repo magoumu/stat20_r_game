@@ -1,18 +1,15 @@
----
-title: "Development Notes"
-author: "Seongwoo Choi UID 706984104, Joy Rui Xi Lim UID 106984220, Junyi Li UID 506942191, Michael Mu 906648946"
-date: "`r Sys.Date()`"
-output: 
-  pdf_document:
-    toc: true
-    number_sections: true
----
+
+# Development Notes
+
+**Authors**: Seongwoo Choi UID 706984104, Joy Rui Xi Lim UID 106984220, Junyi Li UID 506942191, Michael Mu 906648946
 
 ## Objective
 
 We are creating a terminal text-based R mini game. GUI is not needed.
+
 This game has two phases: prep and fight. You are a UCLA student living on the hill. Use your “prep”
 rounds in workouts and food, and purchase supplies in the residential area to gain powers, perks, and options.
+
 Then, you go to school only to find the campus flooded with monsters. Use your perks and powers to defeat the monsters and reach MS4000A, where you confront the Superhuman Yoshua and his soldier Mighty Erik.
 
 ## Game Structure
@@ -68,6 +65,49 @@ Texts & Numbers: TBD
 
 Coding: TBD
 
+
+#### (1) Hostile: combat.R Behavior
+
+How a fight works:
+
+- **Turn order.** Every fighter acts once every `10000 / spd` units of time, so a faster fighter sometimes acts twice in a row. On a tie the player goes first. The order is planned once when the fight starts. Enemies at 0 hp skip their turns.
+- **Damage.** One hit is a draw from a normal distribution with median `atk` and standard deviation `DAMAGE_SD * atk`. The defender's `def` percent is then removed. A negative `def` (from a debuff) lets more damage through. A hit never does less than `MIN_DAMAGE`.
+- **Crits.** A hit is a crit with chance `CRIT_CHANCE` plus LUCK, and is then multiplied by `CRIT_MULT`. Enemies have no LUCK, so they crit at the base chance.
+- **Lucky and unlucky messages.** If the draw is in the lowest or highest 5% of its distribution (`LUCKY_TAIL`), the game prints a message from the player's side. The player's strong hit and an enemy's weak hit are "Lucky!". The reverse are "Unlucky."
+- **Status check.** The hp of everyone in the fight is printed after every hit.
+- **Several enemies.** `fight()` accepts several enemy rows. With more than one alive, the player picks a target.
+
+What the player can do on their turn:
+
+1. **Attack.** Ends the turn.
+2. **Flee.** Works with chance `FLEE_CHANCE` plus LUCK. A failed attempt costs the turn. A successful one ends the fight, and `flee()` gives one random debuff, made smaller by LUCK. Fleeing never takes hp below 1.
+3. **Use item.** Shows the inventory and lets the player use one consumable item. This does not end the turn, but only one item can be used per turn. Items cannot be used on an enemy's turn.
+
+In the finale there is nowhere to flee: the game says so once and the Flee option is hidden. `run_finale()` does this by calling `fight(player, boss, can_flee = FALSE)`.
+
+Changes to shared code in `main.R`:
+
+- `ask_choice(options, show)` has a new optional argument. `show` is one TRUE or FALSE per option, and only the TRUE ones are printed. It returns the position in the full list, so the meaning of each number stays the same when an option is hidden. Calls without `show` work as before.
+- `apply_effect()`, `luck_scale()`, and `luck_check()` are now written. They were stubs, and combat needs them.
+- New setting `LUCK_STEP`: what one point of LUCK is worth. It is added to flee and crit chance, and it changes the size of buffs and debuffs.
+
+#### FOR COLLABORATORS (11.27):
+
+- A failed flee attempt costs the turn and nothing else. This was listed as a group decision.
+- An item's effect is permanent, like every other stat change.
+- A `spd` change during a fight (Energy Drink) restarts the turn order. The player finishes the turn they used the item in, then the order is planned again from the start with the current `spd` of both sides, and the new order is printed.
+
+All of these numbers need to be balanced.
+
+| Setting | File | Now | Meaning |
+| :--- | :--- | :--- | :--- |
+| `DAMAGE_SD` | `campus_data.R` | 0.2 | How much a hit varies, as a share of `atk` |
+| `CRIT_MULT` | `campus_data.R` | 1.5 | How many times bigger a crit is |
+| `MIN_DAMAGE` | `campus_data.R` | 1 | The least damage one hit can do |
+| `LUCKY_TAIL` | `campus_data.R` | 0.05 | Share of hits at each end that get a message |
+| `LUCK_STEP` | `main.R` | 0.05 | One LUCK point = 5 percentage points |
+
+With the example numbers, the starting player always beats the Campus Zombie and always loses to both bosses together.
 
 ## How to Pull This Off
 

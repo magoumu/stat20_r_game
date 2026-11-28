@@ -13,8 +13,22 @@ EVENT_WEIGHTS <- c(0.5,       0.4,      0.1)
 # Chance that a flee attempt works, before LUCK. See fight() in combat.R.
 FLEE_CHANCE <- 0.5
 
-# Chance that a hit is a crit, before LUCK. See calc_damage() in combat.R.
+# Chance that a hit is a crit, before LUCK, and how many times bigger a crit
+# is. See calc_damage() in combat.R.
 CRIT_CHANCE <- 0.1
+CRIT_MULT   <- 1.5
+
+# How much one hit varies: the standard deviation of its normal distribution,
+# as a share of the attacker's atk. 0.2 with atk 20 means most hits land
+# between 13 and 27. See calc_damage() in combat.R.
+DAMAGE_SD <- 0.2
+
+# The least damage one hit can do, however high the defender's def is.
+MIN_DAMAGE <- 1L
+
+# A hit drawn from the lowest or the highest LUCKY_TAIL of its distribution
+# gets an unlucky or lucky message. See report_hit() in combat.R.
+LUCKY_TAIL <- 0.05
 
 # How many options of a choice event the player normally sees, and the
 # prep perk (a prep_perks$name) that shows one more. See event_choice().
@@ -90,6 +104,9 @@ stopifnot(choice_events$effect_1 %in% campus_buffs$name,
 shop_items <- data.frame(
   name        = c("First Aid Kit", "Energy Drink", "Running Shoes", "Pain Reliever"),
   cost        = c(4L,              3L,             3L,              3L),
+  # TRUE = kept in the inventory and used during a fight, see use_item() in
+  # combat.R. FALSE = takes effect when bought.
+  consumable  = c(TRUE,            TRUE,           FALSE,           TRUE),
   description = c(
     "Patch yourself up.",
     "Wings, briefly.",

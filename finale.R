@@ -13,5 +13,6 @@ run_finale <- function(player) {
   #       fight(player, bosses).
   cat("", finale_intro, sep = "\n")
   boss <- bosses[nrow(bosses), ]
-  fight(player, boss)
+  # There is nowhere to flee from MS4000A, so the outcome is "win" or "loss".
+  fight(player, boss, can_flee = FALSE)
 }

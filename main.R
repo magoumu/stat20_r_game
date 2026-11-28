@@ -27,6 +27,12 @@
 # Every stat is a whole number (integer) at all times.
 STAT_COLS <- c("hp", "max_hp", "atk", "def", "spd", "luck")
 
+# main.R: What one point of LUCK is worth. It is added to the chance in
+# luck_check() and to the size of an effect in luck_scale(): 0.05 means
+# 5 percentage points more flee and crit chance, and buffs 5% bigger.
+# A placeholder for Texts & Numbers to set.
+LUCK_STEP <- 0.05
+
 # main.R: Shared player state. Agree on new fields as a group.
 # The starting numbers are placeholders for Texts & Numbers to set.
 new_player <- function() {
@@ -44,16 +50,22 @@ new_player <- function() {
 }
 
 # main.R: Show a numbered menu and return a valid choice.
-ask_choice <- function(options) {
-  numbers <- seq_along(options)
-  cat(paste0(numbers, ". ", options), sep = "\n")
+# Input: options = every option of the menu. show = one TRUE or FALSE per
+#        option. Only the TRUE ones are printed, numbered from 1.
+# Return: the position of the chosen option in options, hidden ones counted.
+#         So ask_choice(c("Attack", "Flee", "Use item"), c(TRUE, FALSE, TRUE))
+#         prints "1. Attack" and "2. Use item" and returns 3 for "Use item".
+ask_choice <- function(options, show = rep(TRUE, length(options))) {
+  shown <- which(show)
+  numbers <- seq_along(shown)
+  cat(paste0(numbers, ". ", options[shown]), sep = "\n")
 
   repeat {
     answer <- trimws(readline("Choose a number: "))
     choice <- match(answer, as.character(numbers))
 
     if (!is.na(choice)) {
-      return(choice)
+      return(shown[choice])
     }
 
     cat("Please enter one of the listed numbers.\n")
@@ -74,9 +86,11 @@ show_status <- function(player) {
 #        in the table. See luck_scale().
 # Return: the updated player list.
 apply_effect <- function(player, effect, scale = 1) {
-  # TODO: multiply each STAT_COLS value in effect by scale, round it to a
-  #       whole number, and add it to the matching player field.
-  #       Then keep hp between 0 and max_hp.
+  for (stat in STAT_COLS) {
+    player[[stat]] <- player[[stat]] + as.integer(round(effect[[stat]] * scale))
+  }
+  player$hp <- min(max(player$hp, 0L), player$max_hp)
+
   player
 }
 
@@ -85,18 +99,21 @@ apply_effect <- function(player, effect, scale = 1) {
 # Input: player. type = "buff" or "debuff", as in campus_buffs$type.
 # Return: one number to pass to apply_effect() as scale.
 luck_scale <- function(player, type) {
-  # TODO: with more player$luck, return more than 1 for a "buff" and less
-  #       than 1 for a "debuff". Never return less than 0.
-  1
+  shift <- LUCK_STEP * player$luck
+  if (type == "debuff") {
+    shift <- -shift
+  }
+
+  max(0, 1 + shift)
 }
 
 # main.R: LUCK-based yes or no, shared by flee attempts and crits.
 # Input: player. base_chance = chance of success (0 to 1) when luck is 0.
 # Return: TRUE or FALSE.
 luck_check <- function(player, base_chance) {
-  # TODO: raise base_chance according to player$luck, keep it between 0 and 1,
-  #       then draw at random.
-  TRUE
+  chance <- min(1, max(0, base_chance + LUCK_STEP * player$luck))
+
+  runif(1) < chance
 }
 
 # main.R: One shop visit, shared by prep locations and campus shop events.
@@ -105,6 +122,9 @@ luck_check <- function(player, base_chance) {
 # Cost-0 prep perks are paid for with the prep round, so they must not repeat.
 # Return: the updated player list.
 run_shop <- function(player, items) {
+  # NOTE: rows with consumable = TRUE are used later, in a fight, by
+  #       use_item() in combat.R. For those, only add the name to
+  #       player$inventory here and do NOT call apply_effect().
   # TODO: list each item with its cost and description, plus a "Leave" option.
   #       On a purchase: check player$money, subtract the cost, call
   #       apply_effect(), and add the item name to player$inventory.
